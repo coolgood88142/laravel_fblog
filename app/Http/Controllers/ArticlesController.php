@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ArticlesControllerr extends Controller
+class ArticlesController extends Controller
 {
     public function getArticlesData()
     {
@@ -52,7 +52,7 @@ class ArticlesControllerr extends Controller
         $content = $request->content;
         $slug = $request->slug;
         $status = 'success';
-        $message = '新增成功!';
+        $message = '更新成功!';
 
         try {
             $check = $this->checkAticlesData($id);
@@ -67,7 +67,7 @@ class ArticlesControllerr extends Controller
                 $status = 'error';
                 $message = '更新失敗!';
             }
-            
+
         } catch (Exception $e) {
             echo $e;
         }
@@ -82,7 +82,7 @@ class ArticlesControllerr extends Controller
     {
         $id = $request->id;
         $status = 'success';
-        $message = '新增成功!';
+        $message = '刪除成功!';
 
         try {
             $check = $this->checkAticlesData($id);
