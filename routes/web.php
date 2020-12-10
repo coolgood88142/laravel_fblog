@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/article', 'ArticlesController@getArticlesData')->name('getArticlesData');
+
+Route::post('/addArticle', 'ArticlesController@addArticleData')->name('addArticles');
+
+Route::post('/updateArticle', 'ArticlesController@updateArticleData')->name('updateArticles');
+
+Route::post('/deleteArticle', 'ArticlesController@deleteArticleData')->name('deleteArticles');

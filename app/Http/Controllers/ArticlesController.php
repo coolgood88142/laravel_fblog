@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Articles;
 use Illuminate\Http\Request;
 
 class ArticlesController extends Controller
 {
     public function getArticlesData()
     {
-        return Articles::all();
+        $articles = Articles::all();
+        $response = [
+            'articles' => $articles, 'add' => route('addArticles'), 'update' => route('updateArticles'),
+            'delete' => route('deleteArticles')
+        ];
+
+        return view('articles', $response);
     }
 
     public function checkArticlesData($id)
