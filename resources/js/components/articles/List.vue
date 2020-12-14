@@ -3,20 +3,18 @@
 		<div class="form-group" id="select">
 			<table class="table table-striped table-bordered" style="width:100%">
 				<tr>
-					<th>ID</th>
 					<th>標題</th>
 					<th>文章內容</th>
 					<th>網址slug</th>
-					<th>編輯設定</th>
+					<th style="width: 150px">編輯設定</th>
 				</tr>
 				<tr v-for="(articles, index) in articlesData" :key="index">
-					<th>{{ articles.id }}</th>
 					<th>{{ articles.title }}</th>
 					<th>{{ articles.content }}</th>
 					<th>{{ articles.slug }}</th>
 					<td>
-						<input type="button" class="btn btn-primary" value="編輯" @click="$emit('update-articles', articles.id, articles.title, articles.content, articles.slug, index)" />
-						<input type="button" class="btn btn-primary" value="刪除" @click="deleteArticles(articles.id, index)" />
+						<input type="button" class="btn btn-primary" value="編輯" @click="$emit('update-articles', articles._id, articles.title, articles.content, articles.slug, index)" />
+						<input type="button" class="btn btn-primary" value="刪除" @click="deleteArticles(articles._id, index)" />
 					</td>
 				</tr>
 			</table>
@@ -30,7 +28,7 @@ export default {
 		articlesData: {
 			type:Array
 		},
-		url: {
+		urlDelete: {
 			type:String
 		}
 	},
@@ -43,14 +41,17 @@ export default {
 	},
 	methods: {
 		deleteArticles(id, index) {
-			let url = this.url
+			let url = this.urlDelete
 			let params = {
                 id: id
 			}
 			
-			axios.delete(url+"/"+id).then((response) => {
-				this.$emit('delete-articles-data', index),
-				this.$emit('is-show-message', true, '刪除成功!')
+			axios.post(url, params).then((response) => {
+                let isSuccess = response.data.status == 'success' ? true : false
+				if (isSuccess) {
+					this.$emit('delete-articles-data', index)
+				}
+                this.$emit('is-show-message', isSuccess, response.data.message)
             }).catch((error) => {
                 if (error.response) {
                     console.log(error.response.data);

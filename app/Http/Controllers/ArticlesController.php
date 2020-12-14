@@ -4,18 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Articles;
 use Illuminate\Http\Request;
+use Illuminate\Support\LazyCollection;
+use Carbon\Carbon;
 
+// require	'vendor/autoload.php';
 class ArticlesController extends Controller
 {
     public function getArticlesData()
     {
         $articles = Articles::all();
         $response = [
-            'articles' => $articles, 'add' => route('addArticles'), 'update' => route('updateArticles'),
+            'articles' => $articles,
+            'add' => route('addArticles'),
+            'update' => route('updateArticles'),
             'delete' => route('deleteArticles')
         ];
 
-        return view('articles', $response);
+        return view('articles', ['data' => $response]);
     }
 
     public function checkArticlesData($id)
@@ -42,6 +47,7 @@ class ArticlesController extends Controller
             $articles->title = $title;
             $articles->content = $content;
             $articles->slug = $slug;
+            $articles->creation_date = Carbon::now();
             $articles->save();
         } catch (Exception $e) {
             echo $e;
@@ -55,6 +61,7 @@ class ArticlesController extends Controller
 
     public function updateArticlesData(Request $request)
     {
+        $id = $request->id;
         $title = $request->title;
         $content = $request->content;
         $slug = $request->slug;
@@ -62,7 +69,7 @@ class ArticlesController extends Controller
         $message = '更新成功!';
 
         try {
-            $check = $this->checkAticlesData($id);
+            $check = $this->checkArticlesData($id);
 
             if ($check) {
                 $articles = Articles::find($id);
@@ -92,10 +99,10 @@ class ArticlesController extends Controller
         $message = '刪除成功!';
 
         try {
-            $check = $this->checkAticlesData($id);
+            $check = $this->checkArticlesData($id);
 
             if ($check) {
-                $articles = Aticles::find($id);
+                $articles = Articles::find($id);
                 $articles->delete();
             } else {
                 $status = 'error';
@@ -110,6 +117,38 @@ class ArticlesController extends Controller
             'status' => $status,
             'message' => $message 
         ];
+    }
+
+    public function test1(){
+        $datas = Articles::all();
+    
+        foreach ($datas as $data) {
+            echo $data;
+        }
+    }
+
+    public function test2(){
+        $datas = Articles::cursor();
+    
+        foreach ($datas as $data) {
+            echo $data;
+        }
+    }
+
+    public function test3(){
+        $articles = LazyCollection ::make(function() {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('GET', 'https://my-json-server.typicode.com/coolgood88142/json_server/articles');
+            $handle = (string) $response->getBody();
+            
+            $handle->filter('\n')->each(function ($node) {
+                yield $node->text();
+            });
+        });
+
+        foreach ($articles as $line) {
+            echo $line . '<br/>';
+        }
     }
 
 }

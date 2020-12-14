@@ -17,8 +17,14 @@ Route::get('/', function () {
 
 Route::get('/article', 'ArticlesController@getArticlesData')->name('getArticlesData');
 
-Route::post('/addArticle', 'ArticlesController@addArticleData')->name('addArticles');
+Route::post('/addArticle', 'ArticlesController@addArticlesData')->name('addArticles');
 
-Route::post('/updateArticle', 'ArticlesController@updateArticleData')->name('updateArticles');
+Route::post('/updateArticle', 'ArticlesController@updateArticlesData')->name('updateArticles');
 
-Route::post('/deleteArticle', 'ArticlesController@deleteArticleData')->name('deleteArticles');
+Route::post('/deleteArticle', 'ArticlesController@deleteArticlesData')->name('deleteArticles');
+
+Route::get('/test1','ArticlesController@test1');
+
+Route::get('/test2','ArticlesController@test2');
+
+Route::get('/test3','ArticlesController@test3');
