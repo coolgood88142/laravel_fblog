@@ -139,15 +139,15 @@ class ArticlesController extends Controller
         $articles = LazyCollection ::make(function() {
             $client = new \GuzzleHttp\Client();
             $response = $client->request('GET', 'https://my-json-server.typicode.com/coolgood88142/json_server/articles');
-            $handle = (string) $response->getBody();
+            $datas = json_decode($response->getBody(), true);
             
-            $handle->filter('\n')->each(function ($node) {
-                yield $node->text();
-            });
+            foreach ($datas as $data) {
+                yield $data;
+            }
         });
 
-        foreach ($articles as $line) {
-            echo $line . '<br/>';
+        foreach ($articles as $data) {
+            var_dump($data);
         }
     }
 
