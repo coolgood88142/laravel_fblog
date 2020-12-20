@@ -119,7 +119,7 @@ class ArticlesController extends Controller
         ];
     }
 
-    public function test1(){
+    public function getArticlesAllData(){
         $datas = Articles::all();
     
         foreach ($datas as $data) {
@@ -127,7 +127,7 @@ class ArticlesController extends Controller
         }
     }
 
-    public function test2(){
+    public function getArticlesCursorData(){
         $datas = Articles::cursor();
     
         foreach ($datas as $data) {
@@ -135,20 +135,53 @@ class ArticlesController extends Controller
         }
     }
 
-    public function test3(){
-        $articles = LazyCollection ::make(function() {
-            $client = new \GuzzleHttp\Client();
-            $response = $client->request('GET', 'https://my-json-server.typicode.com/coolgood88142/json_server/articles');
-            $datas = json_decode($response->getBody(), true);
-            
-            foreach ($datas as $data) {
-                yield $data;
+    public function getArticlesDataRam(){
+        $this->getReturnRamText();
+        echo '<bt/></br>';
+        $this->getYieldRamText();
+    }
+
+    public function getArticles($beginId, $endId){
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://my-json-server.typicode.com/coolgood88142/json_server/articles?_start='. $beginId . '&_end=' . $endId;
+        $response = $client->request('GET', $url);
+        $datas = json_decode($response->getBody(), true);
+
+        return $datas;
+    }
+
+    public function getPrintText($data){
+        var_dump($data);
+        echo '<br/>';
+    }
+
+    public function getYieldRamText(){
+        $datas = LazyCollection::make(function() {   
+            $beginId = 1;
+            $endId = 4;
+            $articles = $this->getArticles($beginId-1, $endId);
+
+            foreach ($articles as $article){
+                yield $article;
             }
         });
 
-        foreach ($articles as $data) {
-            var_dump($data);
+        foreach ($datas as $data){
+            $this->getPrintText($data);
         }
+
+        echo '占用了' . memory_get_usage() . 'Bytes' . '<br/>';
     }
 
+    public function getReturnRamText(){
+        $beginId = 1;
+        $endId = 4;
+        $datas = $this->getArticles($beginId-1, $endId);
+
+        foreach ($datas as $data){
+            $this->getPrintText($data);
+        }
+
+        echo '占用了' . memory_get_usage() . 'Bytes' . '<br/>';
+    }
 }

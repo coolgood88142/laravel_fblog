@@ -23,8 +23,8 @@ Route::post('/updateArticle', 'ArticlesController@updateArticlesData')->name('up
 
 Route::post('/deleteArticle', 'ArticlesController@deleteArticlesData')->name('deleteArticles');
 
-Route::get('/test1','ArticlesController@test1');
+Route::get('/test1','ArticlesController@getArticlesAllData');
 
-Route::get('/test2','ArticlesController@test2');
+Route::get('/test2','ArticlesController@getArticlesCursorData');
 
-Route::get('/test3','ArticlesController@test3');
+Route::get('/test3','ArticlesController@getArticlesDataRam');
