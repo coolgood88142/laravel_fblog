@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\TestData;
 use App\Models\Articles;
 use Illuminate\Http\Request;
 use Illuminate\Support\LazyCollection;
@@ -150,11 +151,6 @@ class ArticlesController extends Controller
         return $datas;
     }
 
-    public function getPrintText($data){
-        var_dump($data);
-        echo '<br/>';
-    }
-
     public function getYieldRamText(){
         $datas = LazyCollection::make(function() {   
             $beginId = 1;
@@ -166,11 +162,12 @@ class ArticlesController extends Controller
             }
         });
 
+        $sum = array();
         foreach ($datas as $data){
-            $this->getPrintText($data);
+            array_push($sum, $data);
         }
 
-        echo '占用了' . memory_get_usage() . 'Bytes' . '<br/>';
+        echo 'yield占用了' . memory_get_usage() . 'Bytes' . '<br/>';
     }
 
     public function getReturnRamText(){
@@ -178,10 +175,26 @@ class ArticlesController extends Controller
         $endId = 4;
         $datas = $this->getArticles($beginId-1, $endId);
 
+        $sum = array();
         foreach ($datas as $data){
-            $this->getPrintText($data);
+            array_push($sum, $data);
         }
 
-        echo '占用了' . memory_get_usage() . 'Bytes' . '<br/>';
+        echo 'return占用了' . memory_get_usage() . 'Bytes' . '<br/>';
+    }
+
+    public function getlterator(){
+        $testArray = ['a' => 0, 'b' => 1, 'c' => 2, 'd' => 3];
+        $datas = new TestData($testArray);
+
+        while ($datas->valid())
+        {
+            $key = $datas->key();
+            $value = $datas->current();
+
+            echo 'key:' . $key . ' value: ' . $value . '<br/><br/>';
+
+            $datas->next();
+        }
     }
 }

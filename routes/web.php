@@ -28,3 +28,5 @@ Route::get('/test1','ArticlesController@getArticlesAllData');
 Route::get('/test2','ArticlesController@getArticlesCursorData');
 
 Route::get('/test3','ArticlesController@getArticlesDataRam');
+
+Route::get('/test4','ArticlesController@getlterator');
